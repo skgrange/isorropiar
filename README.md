@@ -1,8 +1,6 @@
 # **isorropiar**
 
-[![Build Status](https://travis-ci.org/skgrange/isorropiar.svg?branch=master)](https://travis-ci.org/skgrange/isorropiar)
-
-**isorropiar** is an R package to 
+**isorropiar** is an R package to interact with the aerosol thermodynamical equilibrium [ISORROPIA II](https://www.epfl.ch/labs/lapi/software/isorropia/) model. 
 
 # Installation
 
@@ -14,3 +12,5 @@ remotes::install_packages("skgrange/isorropiar")
 ```
 
 # Setting-up
+
+Coming soon...
