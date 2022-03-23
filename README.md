@@ -7,7 +7,7 @@
 The development version of the **isorropiar** package can be easily installed with the [**remotes**](https://github.com/r-lib/remotes) package: 
 
 ```
-# Install hyr
+# Install isorropiar
 remotes::install_packages("skgrange/isorropiar")
 ```
 
