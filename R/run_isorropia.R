@@ -16,11 +16,14 @@
 #' 
 #' \dontrun{
 #' 
-#' # Run the ISORROPIA II model 
+#' # Load demo data
+#' data_demo <- read_isorropia_demo_data()
+#' 
+#' # Run the ISORROPIA II model with demo data
 #' run_isorropia(
-#'  data_pm_observations,
-#'  directory_isorropia = "~/isorropia/source",
-#'  verbose = TRUE
+#'   data_demo,
+#'   directory_isorropia = "~/isorropia/source",
+#'   verbose = TRUE
 #' )
 #' 
 #' }
@@ -28,19 +31,26 @@
 #' @export
 run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   
-  # TODO: check inputs
+  # Check data input
+  if (!identical(names(df), isorropia_input_names())) {
+    stop("Input data have incorrect variables or order.", call. = FALSE)
+  }
+  
+  if (!all(purrr::map_chr(df, class) %in% c("numeric", "integer"))) {
+    stop(
+      "Input data must be made up of numeric or interger variables.", 
+      call. = FALSE
+    )
+  }
+  
+  # Expand path
+  directory_isorropia <- fs::path_abs(directory_isorropia)
+  # Test if it exists
+  stopifnot(fs::dir_exists(directory_isorropia))
   
   # Get system date
   date_system <- lubridate::now()
   date_system_unix <- as.integer(date_system)
-  
-  # Store date if it exists
-  if ("date" %in% names(df)) {
-    dates <- df$date
-    df <- select(df, -date)
-  } else {
-    dates <- lubridate::NA_POSIXct_
-  }
   
   # Store working directory
   directory_current <- getwd()
@@ -55,7 +65,8 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   # Write preamble to control file
   write(isorropia_input_preamble(), file_input)
   
-  # Write the input data to input control file
+  # Write the input data to input control file, using base function here to
+  # avoid progress being displayed
   write.table(df, file_input, append = TRUE, col.names = FALSE, row.names = FALSE)
   
   # Build command string
@@ -71,11 +82,6 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   
   # Read input file
   df_input_nest <- read_isorropia_input_file(file_input)
-  
-  # Add date if it exists too
-  df_input_nest$input[[1]] <- df_input_nest$input[[1]] %>% 
-    mutate(date = !!dates) %>% 
-    relocate(date)
   
   # Add extras
   df_input_nest <- df_input_nest %>% 
@@ -121,22 +127,18 @@ Na      SO4     NH3    NO3     Cl    Ca    K     Mg    RH      TEMP"
 
 combine_isorropia_inputs_and_outputs <- function(df_input, df_output) {
   
+  # Make input longer
   df_input <- df_input %>% 
     mutate(source = "input") %>% 
     tibble::rowid_to_column() %>% 
-    tidyr::pivot_longer(-c(rowid, date, source), names_to = "variable")
+    tidyr::pivot_longer(-c(rowid, source), names_to = "variable")
   
-  # Get dates for joining to output
-  df_dates <- df_input %>% 
-    distinct(rowid,
-             date)
-  
+  # Make output longer, need to drop case because of different data type
   df_output <- df_output %>% 
     mutate(source = "output") %>% 
     tibble::rowid_to_column() %>% 
-    left_join(df_dates, by = "rowid") %>% 
     select(-CASE) %>% 
-    tidyr::pivot_longer(-c(rowid, date, source), names_to = "variable")
+    tidyr::pivot_longer(-c(rowid, source), names_to = "variable")
   
   # Bind the sets
   df <- df_input %>% 
@@ -147,4 +149,9 @@ combine_isorropia_inputs_and_outputs <- function(df_input, df_output) {
   
   return(df)
   
+}
+
+
+isorropia_input_names <- function() {
+  c("Na", "SO4", "NH3", "NO3", "Cl", "Ca", "K", "Mg", "RH", "TEMP")
 }

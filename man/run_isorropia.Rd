@@ -28,9 +28,9 @@ output in a friendly format.
 
 # Run the ISORROPIA II model 
 run_isorropia(
- data_pm_observations,
- directory_isorropia = "~/isorropia/source",
- verbose = TRUE
+  data_pm_observations,
+  directory_isorropia = "~/isorropia/source",
+  verbose = TRUE
 )
 
 }
