@@ -52,6 +52,9 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   date_system <- lubridate::now()
   date_system_unix <- as.integer(date_system)
   
+  # Get isorropia version
+  version <- read_isorropia_version(directory_isorropia)
+  
   # Store working directory
   directory_current <- getwd()
   
@@ -85,8 +88,10 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   
   # Add extras
   df_input_nest <- df_input_nest %>% 
-    mutate(date_model_run = date_system) %>% 
-    relocate(date_model_run)
+    mutate(date_model_run = date_system,
+           version = version) %>% 
+    relocate(date_model_run,
+             version)
   
   # Read results
   df_output <- read_isorropia_output_file(file_output)
@@ -154,4 +159,18 @@ combine_isorropia_inputs_and_outputs <- function(df_input, df_output) {
 
 isorropia_input_names <- function() {
   c("Na", "SO4", "NH3", "NO3", "Cl", "Ca", "K", "Mg", "RH", "TEMP")
+}
+
+
+read_isorropia_version <- function(directory_isorropia) {
+  
+  # Build file name
+  file <- fs::path(directory_isorropia, "isocom.for")
+  
+  # Read file and extract version
+  readr::read_lines(file, progress = FALSE) %>% 
+    stringr::str_subset("DATA VERSION") %>% 
+    stringr::str_split_fixed("/'|'/", n = 3) %>% 
+    .[, 2]
+  
 }

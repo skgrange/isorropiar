@@ -26,9 +26,12 @@ output in a friendly format.
 
 \dontrun{
 
-# Run the ISORROPIA II model 
+# Load demo data
+data_demo <- read_isorropia_demo_data()
+
+# Run the ISORROPIA II model with demo data
 run_isorropia(
-  data_pm_observations,
+  data_demo,
   directory_isorropia = "~/isorropia/source",
   verbose = TRUE
 )
