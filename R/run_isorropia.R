@@ -43,6 +43,10 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
     )
   }
   
+  if (anyNA(df)) {
+    stop("Input data cannot contain missing (`NA`s) data.", call. = FALSE)
+  }
+  
   # Expand path
   directory_isorropia <- fs::path_abs(directory_isorropia)
   # Test if it exists
