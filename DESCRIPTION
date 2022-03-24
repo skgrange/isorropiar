@@ -1,7 +1,7 @@
 Package: isorropiar
 Type: Package
 Title: Command the aerosol thermodynamical equilibrium ISORROPIA II model with R
-Version: 0.0.004
+Version: 0.0.005
 Date: 2022-03-24
 Authors@R: person("Stuart K.", "Grange", email = "stuart.grange@york.ac.uk", 
     role = c("cre", "aut"), comment = c(ORCID = "0000-0003-4093-3596"))

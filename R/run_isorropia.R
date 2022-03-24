@@ -56,6 +56,9 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   date_system <- lubridate::now()
   date_system_unix <- as.integer(date_system)
   
+  # Get number of input observations
+  n_input <- nrow(df)
+  
   # Get isorropia version
   version <- read_isorropia_version(directory_isorropia)
   
@@ -92,10 +95,12 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   
   # Add extras
   df_input_nest <- df_input_nest %>% 
-    mutate(date_model_run = date_system,
-           version = version) %>% 
+    mutate(date_model_run = !!date_system,
+           version = !!version,
+           n_input = !!n_input) %>% 
     relocate(date_model_run,
-             version)
+             version,
+             n_input)
   
   # Read results
   df_output <- read_isorropia_output_file(file_output)
