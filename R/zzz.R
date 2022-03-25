@@ -5,7 +5,8 @@ if (getRversion() >= "2.15.1") {
   # What variables are causing issues?
   variables <- c(
     ".", "rowid", "CASE", "variable", "date_model_rum", "input", "output",
-    "date_model_run"
+    "date_model_run", "Na", "SO4", "NH3", "NO3", "Cl", "Ca", "K", "Mg", "RH",
+    "TEMP"
   )
   
   # Squash the note
