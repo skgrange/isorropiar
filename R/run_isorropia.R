@@ -6,7 +6,8 @@
 #' @param df Input data frame/tibble that is to be modelled with ISORROPIA II.
 #' 
 #' @param directory_isorropia Directory where ISORROPIA II's programme is 
-#' located. 
+#' located. The programme can either be the complied source (\code{isorropia}) 
+#' or the provided Windows \code{.exe} file (\code{isrpia2.exe}). 
 #' 
 #' @param verbose Should the function give messages? 
 #' 
@@ -19,10 +20,18 @@
 #' # Load demo data
 #' data_demo <- read_isorropia_demo_data()
 #' 
-#' # Run the ISORROPIA II model with demo data
+#' # Run the ISORROPIA II model with demo data using a complied version of 
+#' # isorropia
 #' run_isorropia(
 #'   data_demo,
 #'   directory_isorropia = "~/isorropia/source",
+#'   verbose = TRUE
+#' )
+#' 
+#' # Run ISORROPIA II with an executable file on a Windows system
+#' run_isorropia(
+#'   data_demo,
+#'   directory_isorropia = "C:/isorropia/ISO2_1Bin",
 #'   verbose = TRUE
 #' )
 #' 
@@ -30,6 +39,10 @@
 #' 
 #' @export
 run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
+  
+  # Get system date
+  date_system <- lubridate::now()
+  date_system_unix <- as.integer(date_system)
   
   # Check data input
   if (!identical(names(df), isorropia_input_names())) {
@@ -52,9 +65,24 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   # Test if it exists
   stopifnot(fs::dir_exists(directory_isorropia))
   
-  # Get system date
-  date_system <- lubridate::now()
-  date_system_unix <- as.integer(date_system)
+  # Find isorropia programme in directory
+  file_list <- list.files(directory_isorropia)
+  
+  # Get the compiled programme
+  file_isorropia <- stringr::str_subset(file_list, "isorropia")
+  
+  # Get the executable file, this will be for Windows systems
+  if (length(file_isorropia) == 0L) {
+    file_isorropia <- stringr::str_subset(file_list, "isrpia2.exe")
+  }
+  
+  # Error if the programme cannot be found
+  if (length(file_isorropia) == 0L) {
+    stop(
+      "The `isorropia` or `isrpia2.exe` programme cannot be found in the directory.", 
+      call. = FALSE
+    )
+  }
   
   # Get number of input observations
   n_input <- nrow(df)
@@ -80,7 +108,11 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   write.table(df, file_input, append = TRUE, col.names = FALSE, row.names = FALSE)
   
   # Build command string
-  cmd <- stringr::str_c("echo ", file_input, " | ./isorropia")
+  if (.Platform$OS.type != "windows") {
+    cmd <- stringr::str_c("echo ", file_input, " | ./", file_isorropia)
+  } else {
+    cmd <- stringr::str_c("echo ", file_input, " | ", file_isorropia)
+  }
   
   # A message to user
   if (verbose) {
@@ -88,7 +120,11 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   }
   
   # Run/call the isorropia model
-  x <- system(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
+  if (.Platform$OS.type != "windows") {
+    x <- system(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
+  } else {
+    x <- shell(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
+  }
   
   # Read input file
   df_input_nest <- read_isorropia_input_file(file_input)
@@ -177,9 +213,15 @@ read_isorropia_version <- function(directory_isorropia) {
   file <- fs::path(directory_isorropia, "isocom.for")
   
   # Read file and extract version
-  readr::read_lines(file, progress = FALSE) %>% 
-    stringr::str_subset("DATA VERSION") %>% 
-    stringr::str_split_fixed("/'|'/", n = 3) %>% 
-    .[, 2]
+  if (fs::file_exists(file)) {
+    x <-   readr::read_lines(file, progress = FALSE) %>% 
+      stringr::str_subset("DATA VERSION") %>% 
+      stringr::str_split_fixed("/'|'/", n = 3) %>% 
+      .[, 2]
+  } else {
+    x <- NA_character_
+  }
+  
+  return(x)
   
 }

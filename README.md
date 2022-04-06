@@ -15,7 +15,7 @@ remotes::install_packages("skgrange/isorropiar")
 
 ## ISORROPIA II programme structure
 
-The ISORROPIA II code base must be requested from [here](https://www.epfl.ch/labs/lapi/software/isorropia/). After receiving the package, it will require compilation for use on your system. After compilation the directory's contents should look like this: 
+The ISORROPIA II code base must be requested from [here](https://www.epfl.ch/labs/lapi/software/isorropia/) or [here](https://nenes.eas.gatech.edu/ISORROPIA/index_old.html). After receiving the package, it will require compilation for use on your system. After compilation the directory's contents should look like this: 
 
 <!-- # tree --charset ascii source/ --> 
 

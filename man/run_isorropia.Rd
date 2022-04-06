@@ -11,7 +11,8 @@ run_isorropia(df, directory_isorropia, verbose = FALSE)
 \item{df}{Input data frame/tibble that is to be modelled with ISORROPIA II.}
 
 \item{directory_isorropia}{Directory where ISORROPIA II's programme is 
-located.}
+located. The programme can either be the complied source (\code{isorropia}) 
+or the provided Windows \code{.exe} file (\code{isrpia2.exe}).}
 
 \item{verbose}{Should the function give messages?}
 }
@@ -29,10 +30,18 @@ output in a friendly format.
 # Load demo data
 data_demo <- read_isorropia_demo_data()
 
-# Run the ISORROPIA II model with demo data
+# Run the ISORROPIA II model with demo data using a complied version of 
+# isorropia
 run_isorropia(
   data_demo,
   directory_isorropia = "~/isorropia/source",
+  verbose = TRUE
+)
+
+# Run ISORROPIA II with an executable file on a Windows system
+run_isorropia(
+  data_demo,
+  directory_isorropia = "C:/isorropia/ISO2_1Bin",
   verbose = TRUE
 )
 
