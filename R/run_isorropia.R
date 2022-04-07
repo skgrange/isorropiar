@@ -69,11 +69,11 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   file_list <- list.files(directory_isorropia)
   
   # Get the compiled programme
-  file_isorropia <- stringr::str_subset(file_list, "isorropia")
+  file_isorropia <- file_list[file_list == "isorropia"]
   
   # Get the executable file, this will be for Windows systems
   if (length(file_isorropia) == 0L) {
-    file_isorropia <- stringr::str_subset(file_list, "isrpia2.exe")
+    file_isorropia <- file_list[file_list == "isrpia2.exe"]
   }
   
   # Error if the programme cannot be found
