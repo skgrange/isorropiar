@@ -6,7 +6,7 @@ if (getRversion() >= "2.15.1") {
   variables <- c(
     ".", "rowid", "CASE", "variable", "date_model_rum", "input", "output",
     "date_model_run", "Na", "SO4", "NH3", "NO3", "Cl", "Ca", "K", "Mg", "RH",
-    "TEMP"
+    "TEMP", "isorropia_programme"
   )
   
   # Squash the note

@@ -82,15 +82,15 @@ data_isorropia <- run_isorropia(
   directory_isorropia = "source/",
   verbose = TRUE
 )
-#> 2022-04-06 17:27:00.574 CEST: Running ISORROPIA II: `echo 1649258820_isorropia_run.txt | ./isorropia`...
+#> 2022-04-07 08:22:21.636 CEST: Running ISORROPIA II: `echo 1649312541_isorropia_run.txt | ./isorropia`...
 
 # Print the result
 data_isorropia
-#> # A tibble: 1 × 8
+#> # A tibble: 1 × 10
 #> # Rowwise:  date_model_run
-#>   date_model_run      version        n_input input              messages      error_messages     output   combined
-#>   <dttm>              <chr>            <int> <list>             <list>        <chr>              <list>   <list>  
-#> 1 2022-04-06 17:27:00 2.1 (07/19/09)      15 <tibble [15 × 10]> <chr [1,311]> NO ERRORS DETECTED <tibble> <tibble>
+#>   date_model_run      system_type isorropia_programme version n_input input    messages error_messages output   combined
+#>   <dttm>              <chr>       <chr>               <chr>     <int> <list>   <list>   <chr>          <list>   <list>  
+#> 1 2022-04-07 08:22:21 unix        isorropia           2.1 (0…      15 <tibble> <chr>    NO ERRORS DET… <tibble> <tibble>
 ```
 
 #### Using the Windows executable

@@ -107,23 +107,22 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   # avoid progress being displayed
   write.table(df, file_input, append = TRUE, col.names = FALSE, row.names = FALSE)
   
-  # Build command string
-  if (.Platform$OS.type != "windows") {
+  # What type of system? 
+  system_type <- .Platform$OS.type
+  
+  # Build command string and run/call isorropia
+  if (system_type != "windows") {
+    
     cmd <- stringr::str_c("echo ", file_input, " | ./", file_isorropia)
-  } else {
-    cmd <- stringr::str_c("echo ", file_input, " | ", file_isorropia)
-  }
-  
-  # A message to user
-  if (verbose) {
-    message(date_message(), "Running ISORROPIA II: `", cmd, "`...")
-  }
-  
-  # Run/call the isorropia model
-  if (.Platform$OS.type != "windows") {
+    if (verbose) message(date_message(), "Running ISORROPIA II: `", cmd, "`...")
     x <- system(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
+    
   } else {
+    
+    cmd <- stringr::str_c("echo ", file_input, " | ", file_isorropia)
+    if (verbose) message(date_message(), "Running ISORROPIA II: `", cmd, "`...")
     x <- shell(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
+    
   }
   
   # Read input file
@@ -132,9 +131,13 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   # Add extras
   df_input_nest <- df_input_nest %>% 
     mutate(date_model_run = !!date_system,
+           system_type = !!system_type,
+           isorropia_programme = !!file_isorropia,
            version = !!version,
            n_input = !!n_input) %>% 
     relocate(date_model_run,
+             system_type,
+             isorropia_programme,
              version,
              n_input)
   
