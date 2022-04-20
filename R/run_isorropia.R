@@ -45,6 +45,10 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   date_system_unix <- as.integer(date_system)
   
   # Check data input
+  if (nrow(df) == 0L) {
+    stop("Input data contains no observations.", call. = FALSE)
+  }
+  
   if (!identical(names(df), isorropia_input_names())) {
     stop("Input data have incorrect variables or order.", call. = FALSE)
   }
