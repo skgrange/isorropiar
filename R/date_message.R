@@ -1,4 +1,7 @@
 # Pulled from threadr
+cli_date <- function() stringr::str_c(str_date_formatted(), ":")
+
+
 date_message <- function() stringr::str_c(str_date_formatted(), ": ")
 
 

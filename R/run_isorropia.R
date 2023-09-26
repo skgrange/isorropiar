@@ -44,24 +44,21 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   date_system <- lubridate::now()
   date_system_unix <- as.integer(date_system)
   
-  # Check data input
+  # Check data input with some tests
   if (nrow(df) == 0L) {
-    stop("Input data contains no observations.", call. = FALSE)
+    cli::cli_abort("Input data contains no observations.")
   }
   
   if (!identical(names(df), isorropia_input_names())) {
-    stop("Input data have incorrect variables or order.", call. = FALSE)
+    cli::cli_abort("Input data have incorrect variables or order.")
   }
   
   if (!all(purrr::map_chr(df, class) %in% c("numeric", "integer"))) {
-    stop(
-      "Input data must be made up of numeric or interger variables.", 
-      call. = FALSE
-    )
+    cli::cli_abort("Input data must be made up of numeric or integer variables.")
   }
   
   if (anyNA(df)) {
-    stop("Input data cannot contain missing (`NA`s) data.", call. = FALSE)
+    cli::cli_abort("Input data cannot contain missing (`NA`s) data.")
   }
   
   # Expand path
@@ -82,9 +79,8 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   
   # Error if the programme cannot be found
   if (length(file_isorropia) == 0L) {
-    stop(
-      "The `isorropia` or `isrpia2.exe` programme cannot be found in the directory.", 
-      call. = FALSE
+    cli::cli_abort(
+      "The `isorropia` or `isrpia2.exe` programme cannot be found in the directory."
     )
   }
   
@@ -118,13 +114,13 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   if (system_type != "windows") {
     
     cmd <- stringr::str_c("echo ", file_input, " | ./", file_isorropia)
-    if (verbose) message(date_message(), "Running ISORROPIA II: `", cmd, "`...")
+    if (verbose) cli::cli_alert_info("{cli_date()} Running ISORROPIA II: `{cmd}`...")
     x <- system(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
     
   } else {
     
     cmd <- stringr::str_c("echo ", file_input, " | ", file_isorropia)
-    if (verbose) message(date_message(), "Running ISORROPIA II: `", cmd, "`...")
+    if (verbose) cli::cli_alert_info("{cli_date()} Running ISORROPIA II: `{cmd}`...")
     x <- shell(cmd, ignore.stderr = FALSE, ignore.stdout = FALSE, intern = TRUE)
     
   }
