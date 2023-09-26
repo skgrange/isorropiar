@@ -6,7 +6,7 @@
 
 For a usage example see: 
 
-Grange, S. K., Sintermann, J., and Hueglin, C. (2023). [Meteorologically normalised long-term trends of atmospheric ammonia (NH~3~) in Switzerland/Liechtenstein and the explanatory role of gas-aerosol partitioning](https://www.sciencedirect.com/science/article/pii/S0048969723044698). *Science of the Total Environment* 900, p. 165844.
+Grange, S. K., Sintermann, J., and Hueglin, C. (2023). [Meteorologically normalised long-term trends of atmospheric ammonia (NH<sub>3</sub>) in Switzerland/Liechtenstein and the explanatory role of gas-aerosol partitioning](https://www.sciencedirect.com/science/article/pii/S0048969723044698). *Science of the Total Environment* 900, p. 165844.
 
 # Installation
 
