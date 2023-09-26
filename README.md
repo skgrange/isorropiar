@@ -121,7 +121,7 @@ data_isorropia <- run_isorropia(
 
 #### Using the generated outputs
 
-The `data_isorropia` object is a nested tibble object that contains the input passed to ISORROPIA II and the outputs produced by ISORROPIA II. These units can be extracted from the nested structure and can be used within the R analysis ecosystem. For example, to extract ISORROPIA II's output, the `summarise` function can do this rather easily: 
+The `data_isorropia` object is a nested tibble object that contains the input passed to ISORROPIA II and the outputs produced by ISORROPIA II. These units can be extracted from the nested structure and can be used within the R analysis ecosystem. For example, to extract ISORROPIA II's output, the `reframe` function can do this rather easily: 
 
 ``` r
 # Extract the model's output
