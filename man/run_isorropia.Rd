@@ -5,7 +5,12 @@
 \title{Function to run the ISORROPIA II model and return the model's input and 
 output in a friendly format.}
 \usage{
-run_isorropia(df, directory_isorropia, verbose = FALSE)
+run_isorropia(
+  df,
+  directory_isorropia,
+  problem_type = "forward",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{df}{Input data frame/tibble that is to be modelled with ISORROPIA II.}
@@ -13,6 +18,9 @@ run_isorropia(df, directory_isorropia, verbose = FALSE)
 \item{directory_isorropia}{Directory where ISORROPIA II's programme is 
 located. The programme can either be the complied source (\code{isorropia}) 
 or the provided Windows \code{.exe} file (\code{isrpia2.exe}).}
+
+\item{problem_type}{Problem type for ISORROPIA II to solve. 
+\code{problem_type} can either be \code{"forward"} or \code{"reverse"}.}
 
 \item{verbose}{Should the function give messages?}
 }

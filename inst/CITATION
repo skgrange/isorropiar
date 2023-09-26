@@ -1,0 +1,18 @@
+citHeader("To cite isorropiar in publications please use:")
+
+bibentry(
+   bibtype = "Article",
+   title = "Meteorologically normalised long-term trends of atmospheric ammonia (NH\textsubscript{3}) in Switzerland/Liechtenstein and the explanatory role of gas-aerosol partitioning",
+   author = personList(
+     as.person("Stuart K. Grange"), 
+     as.person("J\"org Sintermann"),
+     as.person("Christoph Hueglin")
+    ),
+   journal = "Science of The Total Environment",
+   year = 2023,
+   volume = 900,
+   pages = "165844",
+   url = "https://www.sciencedirect.com/science/article/pii/S0048969723044698",
+   doi = "https://doi.org/10.1016/j.scitotenv.2023.165844"
+)
+

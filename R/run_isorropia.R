@@ -9,6 +9,9 @@
 #' located. The programme can either be the complied source (\code{isorropia}) 
 #' or the provided Windows \code{.exe} file (\code{isrpia2.exe}). 
 #' 
+#' @param problem_type Problem type for ISORROPIA II to solve. 
+#' \code{problem_type} can either be \code{"forward"} or \code{"reverse"}.
+#' 
 #' @param verbose Should the function give messages? 
 #' 
 #' @return Nested tibble with a single row. 
@@ -38,10 +41,11 @@
 #' }
 #' 
 #' @export
-run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
+run_isorropia <- function(df, directory_isorropia, problem_type = "forward", 
+                          verbose = FALSE) {
   
   # Get system date
-  date_system <- lubridate::now()
+  date_system <- lubridate::round_date(lubridate::now(), "second")
   date_system_unix <- as.integer(date_system)
   
   # Check data input with some tests
@@ -84,6 +88,11 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
     )
   }
   
+  # Clean problem type sting
+  problem_type <- problem_type %>% 
+    stringr::str_to_lower() %>% 
+    stringr::str_squish()
+  
   # Get number of input observations
   n_input <- nrow(df)
   
@@ -101,7 +110,7 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
   file_output <- fs::path_ext_set(file_input, "dat")
   
   # Write preamble to control file
-  write(isorropia_input_preamble(), file_input)
+  write(isorropia_input_preamble(problem_type = problem_type), file_input)
   
   # Write the input data to input control file, using base function here to
   # avoid progress being displayed
@@ -134,11 +143,13 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
            system_type = !!system_type,
            isorropia_programme = !!file_isorropia,
            version = !!version,
+           problem_type = !!problem_type,
            n_input = !!n_input) %>% 
     relocate(date_model_run,
              system_type,
              isorropia_programme,
              version,
+             problem_type,
              n_input)
   
   # Read results
@@ -161,12 +172,17 @@ run_isorropia <- function(df, directory_isorropia, verbose = FALSE) {
 }
 
 
-isorropia_input_preamble <- function () {
+isorropia_input_preamble <- function(problem_type) {
   
   # An eight line header with some options followed by eight numbers formatted
   # with a Fortran delimiter
   
-  "Input units (0=umol/m3, 1=ug/m3)
+  # Check the problem type
+  stopifnot(problem_type %in% c("forward", "reverse"))
+  
+  if (problem_type == "forward") {
+    
+    x <- "Input units (0=umol/m3, 1=ug/m3)
 1
 
 Problem type (0=forward, 1=reverse); Phase state (0=solid+liquid, 1=metastable)
@@ -174,6 +190,21 @@ Problem type (0=forward, 1=reverse); Phase state (0=solid+liquid, 1=metastable)
 
 NH4-SO4-NO3 system case
 Na      SO4     NH3    NO3     Cl    Ca    K     Mg    RH      TEMP"
+    
+  } else if (problem_type == "reverse") {
+    
+    x <- "Input units (0=umol/m3, 1=ug/m3)
+1
+
+Problem type (0=forward, 1=reverse); Phase state (0=solid+liquid, 1=metastable)
+1, 0
+
+NH4-SO4-NO3 system case
+Na      SO4     NH3    NO3     Cl    Ca    K     Mg    RH      TEMP"
+    
+  }
+  
+  return(x)
   
 }
 
