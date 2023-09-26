@@ -2,6 +2,12 @@
 
 **isorropiar** is an R package to interact with the aerosol thermodynamical equilibrium [ISORROPIA II](https://www.epfl.ch/labs/lapi/software/isorropia/) model. ISORROPIA II is used for modelling aerosol-gas systems. A common application is to use ISORROPIA II to explore the partitioning of total reduced nitrogen (NH<sub>x</sub>) into the gas (ammonia; NH<sub>3</sub>) and aerosol (ammonium; NH<sub>4</sub><sup>+</sup>) phases. The main reference for ISORROPIA II is an [*Atmospheric Chemistry and Physics* article](https://doi.org/10.5194/acp-7-4639-2007).
 
+## Examples and citations
+
+For a usage example see: 
+
+Grange, S. K., Sintermann, J., and Hueglin, C. (2023). [Meteorologically normalised long-term trends of atmospheric ammonia (NH~3~) in Switzerland/Liechtenstein and the explanatory role of gas-aerosol partitioning](https://www.sciencedirect.com/science/article/pii/S0048969723044698). *Science of the Total Environment* 900, p. 165844.
+
 # Installation
 
 The development version of the **isorropiar** package can be easily installed with the [**remotes**](https://github.com/r-lib/remotes) package: 
@@ -120,8 +126,8 @@ The `data_isorropia` object is a nested tibble object that contains the input pa
 ``` r
 # Extract the model's output
 data_isorropia %>% 
-  summarise(output,
-            .groups = "drop")
+  reframe(output)
+
 #> # A tibble: 15 × 50
 #>    date_model_run      NATOT SO4TOT NH4TOT NO3TOT CLTOT CATOT  KTOT MGTOT    RH  TEMP   GNH3     GHCL    GHNO3    CNACL
 #>    <dttm>              <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
